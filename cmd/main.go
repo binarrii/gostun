@@ -16,7 +16,7 @@ func main() {
 	gostunFlag := flag.NewFlagSet("gostun", flag.ContinueOnError)
 	gostunFlag.BoolVar(&help, "h", false, "Display help information")
 	gostunFlag.BoolVar(&showVersion, "v", false, "Display version information")
-	gostunFlag.IntVar(&model.Verbose, "verbose", 0, "Set verbosity level")
+	gostunFlag.IntVar(&model.Verbose, "verbose", 1, "Set verbosity level")
 	gostunFlag.IntVar(&model.Timeout, "timeout", 3, "Set timeout in seconds for STUN server response")
 	gostunFlag.StringVar(&model.AddrStr, "server", "stun.voipgate.com:3478", "Specify STUN server address")
 	gostunFlag.BoolVar(&model.EnableLoger, "e", true, "Enable logging functionality")
@@ -29,7 +29,7 @@ func main() {
 	go func() {
 		http.Get("https://hits.spiritlhl.net/gostun.svg?action=hit&title=Hits&title_bg=%23555555&count_bg=%230eecf8&edge_flat=false")
 	}()
-	fmt.Println("项目地址:", "https://github.com/oneclickvirt/gostun")
+	// fmt.Println("项目地址:", "https://github.com/oneclickvirt/gostun")
 	if showVersion {
 		fmt.Println(model.GoStunVersion)
 		return
@@ -53,13 +53,13 @@ func main() {
 			if model.EnableLoger {
 				model.NatMappingBehavior = "inconclusive"
 			}
-			model.Log.Warn("NAT mapping behavior: inconclusive")
+			model.Log.Info("NAT mapping behavior: inconclusive")
 		}
 		if err := stuncheck.FilteringTests(model.AddrStr); err != nil {
 			if model.EnableLoger {
 				model.NatFilteringBehavior = "inconclusive"
 			}
-			model.Log.Warn("NAT filtering behavior: inconclusive")
+			model.Log.Info("NAT filtering behavior: inconclusive")
 		}
 	} else {
 		addrStrPtrList := []string{
@@ -73,7 +73,7 @@ func main() {
 			if err1 != nil {
 				model.NatMappingBehavior = "inconclusive"
 				if model.EnableLoger {
-					model.Log.Warn("NAT mapping behavior: inconclusive")
+					model.Log.Info("NAT mapping behavior: inconclusive")
 				}
 				checkStatus = false
 			}
@@ -81,7 +81,7 @@ func main() {
 			if err2 != nil {
 				model.NatFilteringBehavior = "inconclusive"
 				if model.EnableLoger {
-					model.Log.Warn("NAT filtering behavior: inconclusive")
+					model.Log.Info("NAT filtering behavior: inconclusive")
 				}
 				checkStatus = false
 			}

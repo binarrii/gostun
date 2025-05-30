@@ -38,7 +38,7 @@ func MappingTests(addrStr string) error {
 	mapTestConn, err := connect(addrStr)
 	if err != nil {
 		if model.EnableLoger {
-			model.Log.Warnf("Error creating STUN connection: %s", err)
+			model.Log.Infof("Error creating STUN connection: %s", err)
 		}
 		return err
 	}
@@ -78,7 +78,7 @@ func MappingTests(addrStr string) error {
 	if resps1.xorAddr.String() == mapTestConn.LocalAddr.String() {
 		model.NatMappingBehavior = "endpoint independent (no NAT)" // my changes
 		if model.EnableLoger {
-			model.Log.Warn("=> NAT mapping behavior: endpoint independent (no NAT)")
+			model.Log.Info("=> NAT mapping behavior: endpoint independent (no NAT)")
 		}
 		return nil
 	}
@@ -102,7 +102,7 @@ func MappingTests(addrStr string) error {
 	if resps2.xorAddr.String() == resps1.xorAddr.String() {
 		model.NatMappingBehavior = "endpoint independent" // my changes
 		if model.EnableLoger {
-			model.Log.Warn("=> NAT mapping behavior: endpoint independent")
+			model.Log.Info("=> NAT mapping behavior: endpoint independent")
 		}
 		return nil
 	}
@@ -124,12 +124,12 @@ func MappingTests(addrStr string) error {
 	if resps3.xorAddr.String() == resps2.xorAddr.String() {
 		model.NatMappingBehavior = "address dependent" // my changes
 		if model.EnableLoger {
-			model.Log.Warn("=> NAT mapping behavior: address dependent")
+			model.Log.Info("=> NAT mapping behavior: address dependent")
 		}
 	} else {
 		model.NatMappingBehavior = "address and port dependent" // my changes
 		if model.EnableLoger {
-			model.Log.Warn("=> NAT mapping behavior: address and port dependent")
+			model.Log.Info("=> NAT mapping behavior: address and port dependent")
 		}
 	}
 	return mapTestConn.Close()
@@ -140,7 +140,7 @@ func FilteringTests(addrStr string) error {
 	mapTestConn, err := connect(addrStr)
 	if err != nil {
 		if model.EnableLoger {
-			model.Log.Warnf("Error creating STUN connection: %s", err)
+			model.Log.Infof("Error creating STUN connection: %s", err)
 		}
 		return err
 	}
@@ -158,7 +158,7 @@ func FilteringTests(addrStr string) error {
 	resps := parse(resp)
 	if resps.xorAddr == nil || resps.otherAddr == nil {
 		if model.EnableLoger {
-			model.Log.Warn("Error: NAT discovery feature not supported by this server")
+			model.Log.Info("Error: NAT discovery feature not supported by this server")
 		}
 		return errNoOtherAddress
 	}
@@ -183,7 +183,7 @@ func FilteringTests(addrStr string) error {
 		parse(resp)                                         // just to print out the resp
 		model.NatFilteringBehavior = "endpoint independent" // my changes
 		if model.EnableLoger {
-			model.Log.Warn("=> NAT filtering behavior: endpoint independent")
+			model.Log.Info("=> NAT filtering behavior: endpoint independent")
 		}
 		return nil
 	} else if !errors.Is(err, errTimedOut) {
@@ -202,12 +202,12 @@ func FilteringTests(addrStr string) error {
 		parse(resp)                                      // just to print out the resp
 		model.NatFilteringBehavior = "address dependent" // my changes
 		if model.EnableLoger {
-			model.Log.Warn("=> NAT filtering behavior: address dependent")
+			model.Log.Info("=> NAT filtering behavior: address dependent")
 		}
 	} else if errors.Is(err, errTimedOut) {
 		model.NatFilteringBehavior = "address and port dependent" // my changes
 		if model.EnableLoger {
-			model.Log.Warn("=> NAT filtering behavior: address and port dependent")
+			model.Log.Info("=> NAT filtering behavior: address and port dependent")
 		}
 	}
 
@@ -277,7 +277,7 @@ func connect(addrStr string) (*stunServerConn, error) {
 	addr, err := net.ResolveUDPAddr("udp4", addrStr)
 	if err != nil {
 		if model.EnableLoger {
-			model.Log.Warnf("Error resolving address: %s", err)
+			model.Log.Infof("Error resolving address: %s", err)
 		}
 		return nil, err
 	}
@@ -314,7 +314,7 @@ func (c *stunServerConn) roundTrip(msg *stun.Message, addr net.Addr) (*stun.Mess
 	_, err := c.conn.WriteTo(msg.Raw, addr)
 	if err != nil {
 		if model.EnableLoger {
-			model.Log.Warnf("Error sending request to %v", addr)
+			model.Log.Infof("Error sending request to %v", addr)
 		}
 		return nil, err
 	}
